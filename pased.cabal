@@ -26,6 +26,9 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Pascal
+      Sed
+      Transpiler
   other-modules:
       Paths_pased
   autogen-modules:
@@ -35,6 +38,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , mtl >= 2.2 && <3
   default-language: Haskell2010
 
 executable pased-exe
