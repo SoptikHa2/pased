@@ -69,6 +69,21 @@ setVar name value = do
         Swap -- return
         ]
 
+-- True if variable is not zero / not empty
+condition :: MonadState SedState m => String -> [Command] -> [Command] -> m [Command]
+condition variableToCheck trueBody falseBody = do
+    elseLabel <- state incLabel
+    joinLabel <- state incLabel
+    return ([
+        Substitute ("(#" ++ variableToCheck ++ ":0?($|#))") "\1", -- check if is zero or empty
+        GotoIfSubstituted elseLabel -- goto else if false
+        ] ++ trueBody ++ [ -- here execution resumes if truthful
+        Goto joinLabel, -- jump over else
+        Label elseLabel -- here execution resumes if not truthful
+        ] ++ falseBody ++ [
+        Label joinLabel -- here execution resumes after if
+        ])
+
 printHold :: MonadState SedState m => m [Command]
 printHold = return [
         Swap,
