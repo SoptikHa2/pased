@@ -1,2 +1,6 @@
-1 { x ; s/#x:[^#]*/#x:5/ ; tjmp0 ; s/$/#x:5/ ; :jmp0 ; x ; x ; p ; x ; x ; s/#x:[^#]*/#x:6/ ; tjmp1 ; s/$/#x:6/ ; :jmp1 ; x ; x ; p ; x ; }
+1 { x ; s/#x:[^#]*/#x:0/ ; tjmp0 ; s/$/#x:0/ ; :jmp0 ; x ; x ; p ; x ; x ; tjmp3 ; :jmp3 ; s/(#x:0?($|#))/YES|\1/ ; x ; tjmp1 ; i\
+TRUE
+ ; bjmp2 ; :jmp1 ; i\
+FALSE
+ ; :jmp2 ; }
 

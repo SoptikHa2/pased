@@ -74,8 +74,15 @@ condition :: MonadState SedState m => String -> [Command] -> [Command] -> m [Com
 condition variableToCheck trueBody falseBody = do
     elseLabel <- state incLabel
     joinLabel <- state incLabel
+    trashLabel <- state incLabel
     return ([
-        Substitute ("(#" ++ variableToCheck ++ ":0?($|#))") "\1", -- check if is zero or empty
+        Swap,
+        -- clear gotoIfSubstituted flag
+        GotoIfSubstituted trashLabel,
+        Label trashLabel,
+        -- if
+        Substitute ("(#" ++ variableToCheck ++ ":0?($|#))") "YES|\\1", -- check if is zero or empty
+        Swap,
         GotoIfSubstituted elseLabel -- goto else if false
         ] ++ trueBody ++ [ -- here execution resumes if truthful
         Goto joinLabel, -- jump over else
@@ -101,6 +108,14 @@ example = do
 
 setVarExample :: [Command]
 setVarExample = evalState example 0
+
+conditionExample :: [Command]
+conditionExample = evalState condEx 0
+    where condEx = do
+            v1 <- setVar "x" "3"
+            dbg <- printHold
+            cond <- condition "x" [Print "TRUE"] [Print "FALSE"]
+            return $ v1 ++ dbg ++ cond
 
 -- >>> flip evalState 0 $ setVar "x" "5"
 -- [Swap,Substitute "|x:[^|.]*" "|x:5",GotoIfSubstituted "jmp0",Substitute "$" "|x:5",Label "jmp0",Swap]

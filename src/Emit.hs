@@ -21,7 +21,7 @@ emitCommand :: Command -> String
 emitCommand (Label label) = ":" ++ label
 emitCommand (Goto label) = "b" ++ label
 emitCommand Swap = "x"
-emitCommand (Print text) = "i\n" ++ text
+emitCommand (Print text) = "i\\\n" ++ text ++ "\n"
 emitCommand Exit = "b"
 emitCommand (Substitute pattern replacement) = "s/" ++ pattern ++ "/" ++ replacement ++ "/"
 emitCommand (GotoIfSubstituted label) = "t" ++ label

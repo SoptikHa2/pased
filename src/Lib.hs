@@ -1,5 +1,5 @@
 module Lib
-    ( someFunc
+    ( test
     ) where
 
 import Pascal
@@ -18,12 +18,14 @@ examplePascal = Block [Assign "x" (IntConst 1),
                        Throwaway $ FuncCall "print" [VarRead "x"]]
 
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
-
 -- >>> import Pascal
 -- >>> Skip
 -- Skip
 
+test = emit $ Script [Line Start conditionExample]
+
 -- >>> emit $ Script [Line Start setVarExample]
 -- "1 { x ; s/#x:[^#]*/#x:5/ ; tjmp0 ; s/$/#x:5/ ; :jmp0 ; x ; x ; p ; x ; x ; s/#x:[^#]*/#x:6/ ; tjmp1 ; s/$/#x:6/ ; :jmp1 ; x ; x ; p ; x ; }\n"
+
+-- >>> emit $ Script [Line Start conditionExample]
+-- "1 { x ; s/#x:[^#]*/#x:3/ ; tjmp0 ; s/$/#x:3/ ; :jmp0 ; x ; x ; p ; x ; x ; s/(#x:0?($|#))/YES|\\1/ ; x ; tjmp1 ; i\\nTRUE\n ; bjmp2 ; :jmp1 ; i\\nFALSE\n ; :jmp2 ; }\n"
